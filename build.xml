@@ -63,6 +63,8 @@ where:
     value="${xspec.dir}/${xspec.base}-result.xml" />
   <property name="xspec.result.html"
     value="${xspec.dir}/${xspec.base}-result.html" />
+  <property name="xspec.result.junit"
+    value="${xspec.dir}/TEST-${xspec.base}.xml" />
 
 	<macrodef name="xspec"
 						description="Run XSpec tests">
@@ -133,7 +135,14 @@ where:
 						name="http://saxon.sf.net/feature/allow-external-functions"
 						value="true"/>
 			</factory>
-		</xslt>
+    </xslt>
+    <xslt in="${xspec.result.xml}"
+      out="${xspec.result.junit}"
+      style="${xspec.project.dir}/src/junit-reporter/junit-reporter.xsl"
+      classpathref="xspec.classpath"
+      description="Generate JUnit 4 compatible report">
+            <param name="suite" expression="${xspec.xml.base}"/>
+    </xslt>
     <loadfile srcfile="${xspec.result.xml}"
       property="xspec.result" />
     <fail message="XSpec tests failed. See ${xspec.result.html} for a report">
